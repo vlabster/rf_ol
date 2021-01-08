@@ -123,7 +123,7 @@ img1.paste( ImageOps.colorize(w, (0,0,0), (0,0,0)), (800,-125),  w)
 
 img1.save('result.png')
 
-img1.paste(img2, (70, 170))
+# img1.paste(img2, (70, 170))
 
 
 
