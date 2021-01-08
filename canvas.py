@@ -1,6 +1,6 @@
 from random import randint, choice
 import os
-from PIL import Image, ImageFont, ImageDraw
+from PIL import Image, ImageFont, ImageDraw, ImageFilter
 
 canvas = Image.new(mode = "RGBA", size = (900,600))
 
@@ -24,17 +24,6 @@ canvas.paste(newbg, (0,0))
 ### working with the card obj
 
 card = Image.new(mode = "RGBA", size = (780,480))
-randpath_card = choice(os.listdir('cardbgs'))
-cardbg = Image.open('cardbgs/' + randpath_card)
-
-def random_card_crop():
-    left = randint(0,200)
-    upper = randint(0,200)
-    right = left + 780
-    bottom = upper + 480
-    return((left, upper, right, bottom))
-
-newcardbg = cardbg.crop(random_card_crop())
 
 ### add border radius
 
@@ -51,11 +40,24 @@ def add_corners(im, rad):
     im.putalpha(alpha)
     return im
 
-croppedbg = add_corners(newcardbg, 20)
+
+### adding the waves
+
+waves = Image.new(mode = "RGBA", size = (780,480))
+randpath_waves = choice(os.listdir('waves'))
+wavesbg = Image.open('waves/' + randpath_waves)
+randcrop = (randint(0,200), randint(0, 200), randint(300, 600), randint(300, 600))
+newwavesbg = wavesbg.crop(randcrop)
+#resize the waves
+aspect_ratio = 780/480
+sizeval = randint(200,500)
+newsize = (780, 480)
+newwavesbg = newwavesbg.resize(newsize)
+waves = add_corners(newwavesbg, 20)
 
 ### assembling the image
 
-card.paste(croppedbg, (0,0))
+card.paste(waves, (0,0))
 
 canvas.paste(card, (50,50), card)
 
