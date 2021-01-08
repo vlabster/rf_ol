@@ -210,7 +210,7 @@ def changeImageSize(maxWidth,
     newImage    = image.resize((newWidth, newHeight))
     return newImage
 
-final_shit = changeImageSize(800,510, img1)
+final_shit = changeImageSize(830,520, img1)
 
 card.paste(final_shit, (-30,-40), final_shit)
 
