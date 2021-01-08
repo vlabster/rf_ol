@@ -204,6 +204,3 @@ card.paste(final_shit, (0,-70), final_shit)
 canvas.paste(card, (50,50), card)
 
 canvas.save('canvas.png')
-
-
-
