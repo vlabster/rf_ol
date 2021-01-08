@@ -122,7 +122,7 @@ img1.paste( ImageOps.colorize(w, (0,0,0), (0,0,0)), (730,-125),  w)
 #     fill='#1C0606'
 # )
 
-img1.save('result.png')
+# img1.save('result.png')
 
 
 
@@ -220,4 +220,7 @@ canvas.paste(card, (50,50), card)
 card_shadow = Image.open('resourses/card_shadow.png')
 canvas.paste(card_shadow, (-10,-10), card_shadow)
 
-canvas.save('canvas.png')
+canvas.save('result/canvas.png')
+
+
+
