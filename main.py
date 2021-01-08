@@ -40,7 +40,7 @@ def generateToken():
 
     return str
 
-img1 = Image.open('sample.png')
+
 img1 = Image.new(mode = "RGBA", size = (780,480), color = (255, 0, 0, 0))
 
 img2 = Image.open('photos/1.png')
