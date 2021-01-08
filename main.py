@@ -40,7 +40,6 @@ def generateToken():
 
     return str
 
-img1 = Image.open('sample.png')
 img1 = Image.new(mode = "RGBA", size = (780,480), color = (255, 0, 0, 0))
 
 img2 = Image.open('photos/1.png')
@@ -180,9 +179,23 @@ newsize = (780, 480)
 newwavesbg = newwavesbg.resize(newsize)
 waves = add_corners(newwavesbg, 20)
 
+
 ### assembling the image
 
 card.paste(waves, (0,0))
+
+
+### adding the static elements
+
+flag = Image.open('resourses/flag.png')
+numbers = Image.open('resourses/numbers.png')
+photo_shadow = Image.open('resourses/photo_shadow.png')
+
+card.paste(flag, (-30,-40), flag)
+card.paste(numbers, (-25,-22), numbers)
+card.paste(photo_shadow, (-25,-22), photo_shadow)
+
+### resizing the image for proper placement
 
 def changeImageSize(maxWidth, 
                     maxHeight, 
@@ -199,8 +212,12 @@ def changeImageSize(maxWidth,
 
 final_shit = changeImageSize(800,510, img1)
 
-card.paste(final_shit, (0,-70), final_shit)
+card.paste(final_shit, (-30,-40), final_shit)
 
 canvas.paste(card, (50,50), card)
+
+### adding the shadow
+card_shadow = Image.open('resourses/card_shadow.png')
+canvas.paste(card_shadow, (-10,-10), card_shadow)
 
 canvas.save('canvas.png')
