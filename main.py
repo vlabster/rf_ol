@@ -2,6 +2,7 @@ from PIL import Image, ImageFont, ImageDraw, ImageOps
 import random
 from random import randint, choice
 import os
+import datetime
 
 data = ["name", "surname", "burthDate", "Country", "Obl", "date1", "date2", "data3", "country2", "obl2", "categories"]
 
@@ -53,45 +54,80 @@ finImg = ImageDraw.Draw(img1)
 # set font
 font = ImageFont.truetype('fonts/18799.ttf', size=22)
 
+
+def random_line(afile):
+    line = next(afile)
+    for num, aline in enumerate(afile, 2):
+        if random.randrange(num):
+            continue
+        line = aline
+    return line
+
+first_names = open('resourses/names.txt')
+first_name = random_line(first_names).upper()
+
+middle_names = open('resourses/names.txt')
+middle_name = random_line(middle_names).upper()
+
+second_names = open('resourses/families.txt')
+second_name = random_line(second_names).upper()
+
+countries = open('resourses/countries.txt')
+country = random_line(countries).upper()
+
+def get_random_date(start_year, end_year):
+    start_date = datetime.date(start_year, 1, 1)
+    end_date = datetime.date(end_year, 1, 1)
+    time_between_dates = end_date - start_date
+    days_between_dates = time_between_dates.days
+    random_number_of_days = random.randrange(days_between_dates)
+
+    random_date = start_date + datetime.timedelta(days=random_number_of_days)
+    return random_date
+
+birthdate = get_random_date(1940, 2002)
+card_given = get_random_date(2010, 2020)
+card_expires = get_random_date(2022, 2030)
+
 # draw text
 finImg.text(
     (380, 147),
-    'OOO',
+    middle_name,
     font=font,
     fill='#1C0606'
 )
 
 finImg.text(
     (380, 181),
-    'SENSEY',
+    first_name,
     font=font,
     fill='#1C0606'
 )
 
 finImg.text(
     (380, 208),
-    'RAF',
+    second_name,
     font=font,
     fill='#1C0606'
 )
 
 finImg.text(
     (380, 241),
-    '10.10.2020 ' + 'RUSSIA',
+    str(birthdate) + ' ' + country,
     font=font,
     fill='#1C0606'
 )
 
 finImg.text(
     (380, 277),
-    '10.12.2020',
+    str(card_given),
     font=font,
     fill='#1C0606'
 )
 
 finImg.text(
     (380, 313),
-    '10.10.2021',
+    str(card_expires),
     font=font,
     fill='#1C0606'
 )
@@ -189,11 +225,9 @@ card.paste(waves, (0,0))
 
 flag = Image.open('resourses/flag.png')
 numbers = Image.open('resourses/numbers.png')
-photo_shadow = Image.open('resourses/photo_shadow.png')
 
 card.paste(flag, (-30,-40), flag)
 card.paste(numbers, (-25,-22), numbers)
-card.paste(photo_shadow, (-25,-22), photo_shadow)
 
 ### resizing the image for proper placement
 
