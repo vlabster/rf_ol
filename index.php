@@ -16,8 +16,10 @@
 
 //     return true;
 // }
-
-
+// phpinfo();
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 // if (issetParams(["first_name", "middle_name", "second_name", "birthdate", "country"])) {
 $first_name = isset($_REQUEST["first_name"]) ? $_REQUEST["first_name"] : 'RANDOM';
 $middle_name = isset($_REQUEST["middle_name"]) ? $_REQUEST["middle_name"] : 'RANDOM';
@@ -29,6 +31,7 @@ $filename = uniqid();
 $command = escapeshellcmd("main.py " . $first_name . ' ' 
 . $middle_name . ' ' . $second_name . ' ' . $birthdate . ' ' 
 . $country . ' ' . $filename);
+// system('sudo python ' . $command);
 $output = shell_exec($command);
 echo "<img src='result/" . $filename . ".png'>";
 // sleep(5);

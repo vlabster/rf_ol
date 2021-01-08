@@ -1,3 +1,4 @@
+#!/usr/bin/python3.6
 from PIL import Image, ImageFont, ImageDraw, ImageOps, ImageFilter
 import random
 from random import randint, choice
@@ -53,7 +54,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
 
     # set font
-    font = ImageFont.truetype('fonts/18799.ttf', size=22)
+    font = ImageFont.truetype('fonts/18799.TTF', size=22)
 
 
     def random_line(afile):
