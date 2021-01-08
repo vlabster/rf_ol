@@ -3,9 +3,10 @@ import random
 from random import randint, choice
 import os
 import datetime
+import sys
 symbolsMap = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
 
-def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM"):
+def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", filename = "result"):
     data = ["name", "surname", "burthDate", "Country", "Obl", "date1", "date2", "data3", "country2", "obl2", "categories"]
 
     def generateToken():
@@ -261,8 +262,9 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     card_shadow = Image.open('resourses/card_shadow.png')
     canvas.paste(card_shadow, (-10,-10), card_shadow)
 
-    canvas.save('result/canvas.png')
+    canvas.save('result/' + str(filename) + '.png')
 
 
 
-generate_random_id('RANDOM', 'RANDOM', 'RANDOM', 'RANDOM', 'RANDOM')
+# generate_random_id('RANDOM', 'RANDOM', 'RANDOM', 'RANDOM', 'RANDOM')
+generate_random_id(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
