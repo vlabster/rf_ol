@@ -123,7 +123,7 @@ img1.paste( ImageOps.colorize(w, (0,0,0), (0,0,0)), (730,-125),  w)
 #     fill='#1C0606'
 # )
 
-img1.save('result.png')
+# img1.save('result.png')
 
 
 
@@ -203,7 +203,7 @@ card.paste(final_shit, (0,-70), final_shit)
 
 canvas.paste(card, (50,50), card)
 
-canvas.save('canvas.png')
+canvas.save('result/canvas.png')
 
 
 
