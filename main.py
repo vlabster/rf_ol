@@ -41,11 +41,11 @@ def generateToken():
     return str
 
 img1 = Image.new(mode = "RGBA", size = (780,480), color = (255, 0, 0, 0))
+randPhoto = randint(1, 30)
+img2 = Image.open('photos/' + str(randPhoto) + '.png')
+img2.thumbnail((142, 188), Image.ANTIALIAS)
 
-img2 = Image.open('photos/1.png')
-img2.thumbnail((142, 191), Image.ANTIALIAS)
-
-img1.paste(img2, (121, 195))
+img1.paste(img2, (118, 192))
 
 finImg = ImageDraw.Draw(img1)
 
