@@ -114,7 +114,7 @@ d.text( (0, 0), token,  font=font, fill=255)
 
 w=tokenTxt.rotate(90,  expand=1)
 
-img1.paste( ImageOps.colorize(w, (0,0,0), (0,0,0)), (800,-125),  w)
+img1.paste( ImageOps.colorize(w, (0,0,0), (0,0,0)), (730,-125),  w)
 
 # finImg.text(
 #     (200, 10),
