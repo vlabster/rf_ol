@@ -51,39 +51,39 @@ finImg = ImageDraw.Draw(img1)
 
 
 # set font
-font = ImageFont.truetype('fonts/20051.ttf', size=21)
+font = ImageFont.truetype('fonts/18799.ttf', size=23)
 
 # draw text
 finImg.text(
-    (380, 138),
+    (380, 148),
     'OOO',
     font=font,
     fill='#1C0606'
 )
 
 finImg.text(
-    (380, 175),
+    (380, 183),
     'SENSEY',
     font=font,
     fill='#1C0606'
 )
 
 finImg.text(
-    (380, 200),
+    (380, 208),
     'RAF',
     font=font,
     fill='#1C0606'
 )
 
 finImg.text(
-    (380, 240),
+    (380, 244),
     '10.10.2020 ' + 'RUSSIA',
     font=font,
     fill='#1C0606'
 )
 
 finImg.text(
-    (380, 279),
+    (380, 282),
     '10.12.2020',
     font=font,
     fill='#1C0606'
@@ -99,7 +99,7 @@ finImg.text(
 token = generateToken()
 
 finImg.text(
-    (380, 355),
+    (380, 353),
     token,
     font=font,
     fill='#1C0606'
