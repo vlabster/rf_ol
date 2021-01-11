@@ -4,8 +4,11 @@ import random
 from random import randint, choice
 import os
 import datetime
+from flask import Flask
+from flask import send_file, request
 import sys
 symbolsMap = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
+
 
 def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", filename = "result"):
     data = ["name", "surname", "burthDate", "Country", "Obl", "date1", "date2", "data3", "country2", "obl2", "categories"]
@@ -267,5 +270,27 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
 
 
-# generate_random_id('RANDOM', 'RANDOM', 'RANDOM', 'RANDOM', 'RANDOM')
-generate_random_id(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
+# generate_random_id(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
+
+
+### define a flask endpoint
+
+app = Flask(__name__)
+
+@app.route('/get_image')
+def get_image():
+    random_shit = str(randint(10000000,99999999))
+    first_name = request.args.get('first_name')
+    middle_name = request.args.get('middle_name')
+    second_name = request.args.get('second_name')
+    birthdate = request.args.get('birthdate')
+    country = request.args.get('country')
+    generate_random_id(first_name, middle_name, second_name, birthdate, country, filename = random_shit)
+    filename = 'result/' + random_shit + '.png'
+    return send_file(filename, mimetype='image/png')
+
+@app.route('/')
+def h():
+    return 'hello world'
+
+app.run(host='0.0.0.0', port=81)
