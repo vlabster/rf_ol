@@ -7,11 +7,12 @@ import datetime
 from flask import Flask
 from flask import send_file, request
 import sys
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 
 app = Flask(__name__)
 CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 symbolsMap = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
 
 
@@ -283,6 +284,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 app = Flask(__name__)
 
 @app.route('/get_image')
+@cross_origin()
 def get_image():
     random_shit = str(randint(10000000,99999999))
     first_name = request.args.get('first_name')
@@ -295,6 +297,7 @@ def get_image():
     return send_file(filename, mimetype='image/png')
 
 @app.route('/')
+@cross_origin()
 def h():
     return 'hello, fellow wanderer. trying to find anything special?'
 
