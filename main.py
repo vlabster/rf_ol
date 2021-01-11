@@ -293,4 +293,5 @@ def get_image():
 def h():
     return 'hello, fellow wanderer. trying to find anything special?'
 
-app.run(host='0.0.0.0', port=81)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
