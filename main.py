@@ -291,6 +291,6 @@ def get_image():
 
 @app.route('/')
 def h():
-    return 'hello world'
+    return 'hello, fellow wanderer. trying to find anything special?'
 
 app.run(host='0.0.0.0', port=81)
