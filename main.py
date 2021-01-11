@@ -7,6 +7,11 @@ import datetime
 from flask import Flask
 from flask import send_file, request
 import sys
+from flask_cors import CORS
+
+
+app = Flask(__name__)
+CORS(app)
 symbolsMap = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
 
 
