@@ -10,6 +10,8 @@ from flask import Flask
 from flask import send_file, request
 import sys
 from flask_cors import CORS, cross_origin
+import base64
+import shutil
  
 import os
 
@@ -289,7 +291,20 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
 ### define a flask endpoint
  
-
+@app.route('/clear')
+@cross_origin()
+def clear():
+    folder = '/var/www/www-root/data/www/liontracts.ru/FlaskApp/FlaskApp/result'
+    for the_file in os.listdir(folder):
+        file_path = os.path.join(folder, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+            #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+        except Exception as e:
+            return 'false'
+    return 'true'
+    
 
 @app.route('/get_image')
 @cross_origin()
@@ -302,6 +317,7 @@ def get_image():
     country = request.args.get('country')
     generate_random_id(first_name, middle_name, second_name, birthdate, country, filename = random_shit)
     filename = 'result/' + random_shit + '.png'
+
     return send_file(filename, mimetype='image/png')
  
 @app.route('/')
@@ -310,4 +326,4 @@ def hello_world():
  
 if __name__ == '__main__':
     context = (cer, key)
-    app.run( host='0.0.0.0', port=5011, debug = True, ssl_context=context)
+    app.run( host='0.0.0.0', port=5012, debug = True, ssl_context=context)
