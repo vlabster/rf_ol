@@ -1,4 +1,6 @@
 #!/usr/bin/python3.6
+from flask import Flask
+from OpenSSL import SSL
 from PIL import Image, ImageFont, ImageDraw, ImageOps, ImageFilter
 import random
 from random import randint, choice
@@ -8,13 +10,17 @@ from flask import Flask
 from flask import send_file, request
 import sys
 from flask_cors import CORS, cross_origin
-from OpenSSL import SSL
-context = SSL.Context(SSL.PROTOCOL_TLSv1_2)
-context.use_privatekey_file('/etc/ssl/private/server.key')
-context.use_certificate_file('/etc/ssl/private/server.crt')
-
+import base64
+import shutil
+ 
+import os
 
 app = Flask(__name__)
+
+context = SSL.Context(SSL.SSLv23_METHOD)
+cer = os.path.join(os.path.dirname(__file__), '/var/www/httpd-cert/www-root/liontracts.ru_le1.crt')
+key = os.path.join(os.path.dirname(__file__), '/var/www/httpd-cert/www-root/liontracts.ru_le1.key')
+
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 symbolsMap = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
@@ -284,8 +290,21 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
 
 ### define a flask endpoint
-
-app = Flask(__name__)
+ 
+@app.route('/clear')
+@cross_origin()
+def clear():
+    folder = '/var/www/www-root/data/www/liontracts.ru/FlaskApp/FlaskApp/result'
+    for the_file in os.listdir(folder):
+        file_path = os.path.join(folder, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+            #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+        except Exception as e:
+            return 'false'
+    return 'true'
+    
 
 @app.route('/get_image')
 @cross_origin()
@@ -298,12 +317,13 @@ def get_image():
     country = request.args.get('country')
     generate_random_id(first_name, middle_name, second_name, birthdate, country, filename = random_shit)
     filename = 'result/' + random_shit + '.png'
+
     return send_file(filename, mimetype='image/png')
-
+ 
 @app.route('/')
-@cross_origin()
-def h():
-    return 'hello, fellow wanderer. trying to find anything special?'
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', ssl_context = context)
+def hello_world():
+    return 'Hello World!'
+ 
+if __name__ == '__main__':
+    context = (cer, key)
+    app.run( host='0.0.0.0', ssl_context=context)
