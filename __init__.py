@@ -14,7 +14,7 @@ import base64
 import shutil
  
 import os
-
+here = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
 
 context = SSL.Context(SSL.SSLv23_METHOD)
@@ -64,7 +64,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
     img1 = Image.new(mode = "RGBA", size = (780,480), color = (255, 0, 0, 0))
     randPhoto = randint(1, 30)
-    img2 = Image.open('photos/' + str(randPhoto) + '.png')
+    img2 = Image.open(str(here) + '/photos/' + str(randPhoto) + '.png')
     img2.thumbnail((142, 188), Image.ANTIALIAS)
 
     img1.paste(img2, (118, 192))
@@ -73,7 +73,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
 
     # set font
-    font = ImageFont.truetype('fonts/18799.TTF', size=22)
+    font = ImageFont.truetype(str(here) + '/fonts/18799.TTF', size=22)
 
 
     def random_line(afile):
@@ -85,19 +85,19 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
         return line
 
     if (first_name == "RANDOM"):
-        first_names = open('resourses/names.txt')
+        first_names = open(str(here) + '/resourses/names.txt')
         first_name = random_line(first_names).upper()
 
     if (middle_name == "RANDOM"):
-        middle_names = open('resourses/names.txt')
+        middle_names = open(str(here) + '/resourses/names.txt')
         middle_name = random_line(middle_names).upper()
 
     if (second_name == "RANDOM"):
-        second_names = open('resourses/families.txt')
+        second_names = open(str(here) + '/resourses/families.txt')
         second_name = random_line(second_names).upper()
 
     if (country == "RANDOM"):
-        countries = open('resourses/countries.txt')
+        countries = open(str(here) + '/resourses/countries.txt')
         country = random_line(countries).upper()
 
 
@@ -194,9 +194,9 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
     ### working with the main canvas backround
 
-    randpath_bg = choice(os.listdir('bgs'))
+    randpath_bg = choice(os.listdir(str(here) + '/bgs'))
 
-    bg = Image.open('bgs/' + randpath_bg)
+    bg = Image.open(str(here) + '/bgs/' + randpath_bg)
 
     def random_bg_crop():
         left = randint(0,200)
@@ -232,8 +232,8 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     ### adding the waves
 
     waves = Image.new(mode = "RGBA", size = (780,480))
-    randpath_waves = choice(os.listdir('waves'))
-    wavesbg = Image.open('waves/' + randpath_waves)
+    randpath_waves = choice(os.listdir(str(here) + '/waves'))
+    wavesbg = Image.open(str(here) + '/waves/' + randpath_waves)
     randcrop = (randint(0,200), randint(0, 200), randint(300, 600), randint(300, 600))
     newwavesbg = wavesbg.crop(randcrop)
     #resize the waves
@@ -251,8 +251,8 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
     ### adding the static elements
 
-    flag = Image.open('resourses/flag.png')
-    numbers = Image.open('resourses/numbers.png')
+    flag = Image.open(str(here) + '/resourses/flag.png')
+    numbers = Image.open(str(here) + '/resourses/numbers.png')
 
     card.paste(flag, (-30,-40), flag)
     card.paste(numbers, (-25,-22), numbers)
@@ -279,10 +279,10 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     canvas.paste(card, (50,50), card)
 
     ### adding the shadow
-    card_shadow = Image.open('resourses/card_shadow.png')
+    card_shadow = Image.open(str(here) + '/resourses/card_shadow.png')
     canvas.paste(card_shadow, (-10,-10), card_shadow)
 
-    canvas.save('result/' + str(filename) + '.png')
+    canvas.save(str(here) + '/result/' + str(filename) + '.png')
 
 
 
@@ -291,19 +291,19 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
 ### define a flask endpoint
  
-@app.route('/clear')
-@cross_origin()
-def clear():
-    folder = '/var/www/www-root/data/www/liontracts.ru/FlaskApp/FlaskApp/result'
-    for the_file in os.listdir(folder):
-        file_path = os.path.join(folder, the_file)
-        try:
-            if os.path.isfile(file_path):
-                os.unlink(file_path)
-            #elif os.path.isdir(file_path): shutil.rmtree(file_path)
-        except Exception as e:
-            return 'false'
-    return 'true'
+# @app.route('/clear')
+# @cross_origin()
+# def clear():
+#     folder = str(here) + '/result/'
+#     for the_file in os.listdir(folder):
+#         file_path = os.path.join(folder, the_file)
+#         try:
+#             if os.path.isfile(file_path):
+#                 os.unlink(file_path)
+#             #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+#         except Exception as e:
+#             return 'false'
+#     return 'true'
     
 
 @app.route('/get_image')
@@ -316,7 +316,7 @@ def get_image():
     birthdate = request.args.get('birthdate')
     country = request.args.get('country')
     generate_random_id(first_name, middle_name, second_name, birthdate, country, filename = random_shit)
-    filename = 'result/' + random_shit + '.png'
+    filename = str(here) + '/result/' + random_shit + '.png'
 
     return send_file(filename, mimetype='image/png')
  
@@ -326,4 +326,4 @@ def hello_world():
  
 if __name__ == '__main__':
     context = (cer, key)
-    app.run( host='0.0.0.0', port=5012, debug = True, ssl_context=context)
+    app.run( host='0.0.0.0', ssl_context=context)
