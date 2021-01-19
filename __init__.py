@@ -12,6 +12,7 @@ import sys
 from flask_cors import CORS, cross_origin
 import base64
 import shutil
+from werkzeug.utils import secure_filename
  
 import os
 here = os.path.dirname(os.path.abspath(__file__))
@@ -26,7 +27,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 symbolsMap = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
 
 
-def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", filename = "result"):
+def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", filename = "result", path = "RANDOM", param = 0):
     data = ["name", "surname", "burthDate", "Country", "Obl", "date1", "date2", "data3", "country2", "obl2", "categories"]
 
     def generateToken():
@@ -63,8 +64,12 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
         return str
 
     img1 = Image.new(mode = "RGBA", size = (780,480), color = (255, 0, 0, 0))
-    randPhoto = randint(1, 30)
-    img2 = Image.open(str(here) + '/photos/' + str(randPhoto) + '.png')
+    randPhoto = randint(1, 59)
+    if (param == 0):
+        img2 = Image.open(str(here) + '/photos/' + str(randPhoto) + '.png')
+    else:
+        img2 = Image.open(path)
+
     img2.thumbnail((142, 188), Image.ANTIALIAS)
 
     img1.paste(img2, (118, 192))
@@ -306,7 +311,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 #     return 'true'
     
 
-@app.route('/get_image')
+@app.route('/get_image', methods=['POST'])
 @cross_origin()
 def get_image():
     random_shit = str(randint(10000000,99999999))
@@ -315,7 +320,16 @@ def get_image():
     second_name = request.args.get('second_name')
     birthdate = request.args.get('birthdate')
     country = request.args.get('country')
-    generate_random_id(first_name, middle_name, second_name, birthdate, country, filename = random_shit)
+    try:
+        img = request.files.get('file')
+        img.save(os.path.join(str(here) + '/saved', secure_filename(img.filename)))
+        path = os.path.join(str(here) + '/saved', secure_filename(img.filename))
+        param = 1
+    except:
+        param = 0
+        path = os.path.join(str(here) + '/saved', secure_filename(img.filename))
+
+    generate_random_id(first_name, middle_name, second_name, birthdate, country, random_shit, str(path), param)
     filename = str(here) + '/result/' + random_shit + '.png'
 
     return send_file(filename, mimetype='image/png')
