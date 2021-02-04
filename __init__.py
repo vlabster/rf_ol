@@ -88,7 +88,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     else:
         img2 = Image.open(path)
 
-    img2.thumbnail((142, 188), Image.ANTIALIAS)
+    img2.thumbnail((142, 300), Image.ANTIALIAS)
 
     img1.paste(img2, (118, 192))
 
