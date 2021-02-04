@@ -320,6 +320,8 @@ def get_image():
     second_name = request.args.get('second_name')
     birthdate = request.args.get('birthdate')
     country = request.args.get('country')
+    param = -1
+    path = ''
     try:
         img = request.files.get('file')
         img.save(os.path.join(str(here) + '/saved', secure_filename(img.filename)))
@@ -327,10 +329,12 @@ def get_image():
         param = 1
     except:
         param = 0
-        path = os.path.join(str(here) + '/saved', secure_filename(img.filename))
+        path = ''
 
     generate_random_id(first_name, middle_name, second_name, birthdate, country, random_shit, str(path), param)
     filename = str(here) + '/result/' + random_shit + '.png'
+    if (param == 1):
+        os.remove(path)
 
     return send_file(filename, mimetype='image/png')
  
