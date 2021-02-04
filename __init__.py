@@ -98,6 +98,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     # set font
     fontDir = str(here) + '/fonts/'
     font = ImageFont.truetype(os.path.join(fontDir, random.choice(os.listdir(fontDir))), size=22)
+    phrase_font = ImageFont.truetype(os.path.join(fontDir, random.choice(os.listdir(fontDir))), size=30)
     # font = ImageFont.truetype(str(here) + '/fonts/18799.TTF', size=22)
 
 
@@ -275,11 +276,30 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
 
     ### adding the static elements
+    randpath_flag = choice(os.listdir(str(here) + '/flags'))
+    flag = Image.open(str(here) + '/flags/' + randpath_flag)
 
-    flag = Image.open(str(here) + '/resourses/flag.png')
     numbers = Image.open(str(here) + '/resourses/numbers.png')
 
-    card.paste(flag, (-30,-40), flag)
+    card.paste(flag, (30,10), flag)
+
+    phrases = open(str(here) + '/resourses/phrases.txt')
+    phrase = random_line(phrases).upper()
+
+    random0_255 = lambda: random.randint(0,120)
+
+    randomhex = '#%02X%02X%02X' % (random0_255(),random0_255(),random0_255())
+
+    cardDraw = ImageDraw.Draw(card)
+
+    cardDraw.text(
+        (180, 50),
+        str(phrase),
+        font=phrase_font,
+        fill=str(randomhex)
+    )
+
+
     card.paste(numbers, (-25,-22), numbers)
 
     ### resizing the image for proper placement

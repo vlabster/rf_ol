@@ -1,4 +1,6 @@
 #!/usr/bin/python3.6
+from flask import Flask
+from OpenSSL import SSL
 from PIL import Image, ImageFont, ImageDraw, ImageOps, ImageFilter
 import random
 from random import randint, choice
@@ -8,19 +10,28 @@ from flask import Flask
 from flask import send_file, request
 import sys
 from flask_cors import CORS, cross_origin
-from OpenSSL import SSL
-context = SSL.Context(SSL.PROTOCOL_TLSv1_2)
-context.use_privatekey_file('/etc/ssl/private/server.key')
-context.use_certificate_file('/etc/ssl/private/server.crt')
+import base64
+import shutil
+from werkzeug.utils import secure_filename
 
+import shutil
+import time
+import requests
 
+import os
+here = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
+
+# context = SSL.Context(SSL.SSLv23_METHOD)
+# cer = os.path.join(os.path.dirname(__file__), '/var/www/httpd-cert/www-root/liontracts.ru_le1.crt')
+# key = os.path.join(os.path.dirname(__file__), '/var/www/httpd-cert/www-root/liontracts.ru_le1.key')
+
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 symbolsMap = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
 
 
-def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", filename = "result"):
+def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", filename = "result", path = "RANDOM", param = 0):
     data = ["name", "surname", "burthDate", "Country", "Obl", "date1", "date2", "data3", "country2", "obl2", "categories"]
 
     def generateToken():
@@ -57,8 +68,26 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
         return str
 
     img1 = Image.new(mode = "RGBA", size = (780,480), color = (255, 0, 0, 0))
-    randPhoto = randint(1, 30)
-    img2 = Image.open('photos/' + str(randPhoto) + '.png')
+    randPhoto = randint(1, 59)
+
+    url = 'https://thispersondoesnotexist.com/image'
+    current_datetime = str(time.time())
+
+    responce = requests.get(url, stream=True)
+    if (param == 0):
+        img2 = ''
+        try:
+            with open(str(here) + '/result/' + current_datetime + '.png', 'wb') as out_file:
+                shutil.copyfileobj(responce.raw, out_file)
+            del responce
+            img2 = Image.open(str(here) + '/result/' + current_datetime + '.png')   
+        except:
+            dir = str(here) + '/photos/'
+            img2 = Image.open(os.path.join(dir, random.choice(os.listdir(dir))))
+        # img2 = Image.open(str(here) + '/photos/' + str(randPhoto) + '.png')
+    else:
+        img2 = Image.open(path)
+
     img2.thumbnail((142, 188), Image.ANTIALIAS)
 
     img1.paste(img2, (118, 192))
@@ -67,7 +96,10 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
 
     # set font
-    font = ImageFont.truetype('fonts/18799.TTF', size=22)
+    fontDir = str(here) + '/fonts/'
+    font = ImageFont.truetype(os.path.join(fontDir, random.choice(os.listdir(fontDir))), size=22)
+    phrase_font = ImageFont.truetype(os.path.join(fontDir, random.choice(os.listdir(fontDir))), size=30)
+    # font = ImageFont.truetype(str(here) + '/fonts/18799.TTF', size=22)
 
 
     def random_line(afile):
@@ -79,19 +111,19 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
         return line
 
     if (first_name == "RANDOM"):
-        first_names = open('resourses/names.txt')
+        first_names = open(str(here) + '/resourses/names.txt')
         first_name = random_line(first_names).upper()
 
     if (middle_name == "RANDOM"):
-        middle_names = open('resourses/names.txt')
+        middle_names = open(str(here) + '/resourses/names.txt')
         middle_name = random_line(middle_names).upper()
 
     if (second_name == "RANDOM"):
-        second_names = open('resourses/families.txt')
+        second_names = open(str(here) + '/resourses/families.txt')
         second_name = random_line(second_names).upper()
 
     if (country == "RANDOM"):
-        countries = open('resourses/countries.txt')
+        countries = open(str(here) + '/resourses/countries.txt')
         country = random_line(countries).upper()
 
 
@@ -188,9 +220,9 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
     ### working with the main canvas backround
 
-    randpath_bg = choice(os.listdir('bgs'))
+    randpath_bg = choice(os.listdir(str(here) + '/bgs'))
 
-    bg = Image.open('bgs/' + randpath_bg)
+    bg = Image.open(str(here) + '/bgs/' + randpath_bg)
 
     def random_bg_crop():
         left = randint(0,200)
@@ -226,8 +258,8 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     ### adding the waves
 
     waves = Image.new(mode = "RGBA", size = (780,480))
-    randpath_waves = choice(os.listdir('waves'))
-    wavesbg = Image.open('waves/' + randpath_waves)
+    randpath_waves = choice(os.listdir(str(here) + '/waves'))
+    wavesbg = Image.open(str(here) + '/waves/' + randpath_waves)
     randcrop = (randint(0,200), randint(0, 200), randint(300, 600), randint(300, 600))
     newwavesbg = wavesbg.crop(randcrop)
     #resize the waves
@@ -244,11 +276,31 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
 
     ### adding the static elements
+    randpath_flag = choice(os.listdir(str(here) + '/flags'))
+    flag = Image.open(str(here) + '/flags/' + randpath_flag)
 
-    flag = Image.open('resourses/flag.png')
-    numbers = Image.open('resourses/numbers.png')
 
-    card.paste(flag, (-30,-40), flag)
+
+    numbers = Image.open(str(here) + '/resourses/numbers.png')
+
+    card.paste(flag, (30,10), flag)
+
+    phrases = open(str(here) + '/resourses/phrases.txt')
+    phrase = random_line(phrases).upper()
+
+    random0_255 = lambda: random.randint(0,120)
+
+    randomhex = '#%02X%02X%02X' % (random0_255(),random0_255(),random0_255())
+
+    cardDraw = ImageDraw.Draw(card)
+
+    cardDraw.text(
+        (180, 50),
+        str(phrase),
+        font=phrase_font,
+        fill=str(randomhex)
+    )
+
     card.paste(numbers, (-25,-22), numbers)
 
     ### resizing the image for proper placement
@@ -273,10 +325,10 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     canvas.paste(card, (50,50), card)
 
     ### adding the shadow
-    card_shadow = Image.open('resourses/card_shadow.png')
+    card_shadow = Image.open(str(here) + '/resourses/card_shadow.png')
     canvas.paste(card_shadow, (-10,-10), card_shadow)
 
-    canvas.save('result/' + str(filename) + '.png')
+    canvas.save(str(here) + '/result/' + str(filename) + '.png')
 
 
 
@@ -284,10 +336,23 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
 
 ### define a flask endpoint
+ 
+# @app.route('/clear')
+# @cross_origin()
+# def clear():
+#     folder = str(here) + '/result/'
+#     for the_file in os.listdir(folder):
+#         file_path = os.path.join(folder, the_file)
+#         try:
+#             if os.path.isfile(file_path):
+#                 os.unlink(file_path)
+#             #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+#         except Exception as e:
+#             return 'false'
+#     return 'true'
+    
 
-app = Flask(__name__)
-
-@app.route('/get_image')
+@app.route('/get_image', methods=['get'])
 @cross_origin()
 def get_image():
     random_shit = str(randint(10000000,99999999))
@@ -296,14 +361,27 @@ def get_image():
     second_name = request.args.get('second_name')
     birthdate = request.args.get('birthdate')
     country = request.args.get('country')
-    generate_random_id(first_name, middle_name, second_name, birthdate, country, filename = random_shit)
-    filename = 'result/' + random_shit + '.png'
+    param = -1
+    path = ''
+    try:
+        img = request.files.get('file')
+        img.save(os.path.join(str(here) + '/saved', secure_filename(img.filename)))
+        path = os.path.join(str(here) + '/saved', secure_filename(img.filename))
+        param = 1
+    except:
+        param = 0
+        path = ''
+
+    generate_random_id(first_name, middle_name, second_name, birthdate, country, random_shit, str(path), param)
+    filename = str(here) + '/result/' + random_shit + '.png'
+    if (param == 1):
+        os.remove(path)
+
     return send_file(filename, mimetype='image/png')
-
+ 
 @app.route('/')
-@cross_origin()
-def h():
-    return 'hello, fellow wanderer. trying to find anything special?'
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', ssl_context = context)
+def hello_world():
+    return 'Hello World!'
+ 
+if __name__ == '__main__':
+    app.run()
