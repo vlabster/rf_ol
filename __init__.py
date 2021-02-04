@@ -66,7 +66,9 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     img1 = Image.new(mode = "RGBA", size = (780,480), color = (255, 0, 0, 0))
     randPhoto = randint(1, 59)
     if (param == 0):
-        img2 = Image.open(str(here) + '/photos/' + str(randPhoto) + '.png')
+        dir = str(here) + '/photos/'
+        img2 = Image.open(os.path.join(dir, random.choice(os.listdir(dir))))
+        # img2 = Image.open(str(here) + '/photos/' + str(randPhoto) + '.png')
     else:
         img2 = Image.open(path)
 
