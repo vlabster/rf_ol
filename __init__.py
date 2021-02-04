@@ -80,7 +80,9 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
 
     # set font
-    font = ImageFont.truetype(str(here) + '/fonts/18799.TTF', size=22)
+    fontDir = str(here) + '/fonts/'
+    font = ImageFont.truetype(os.path.join(fontDir, random.choice(os.listdir(fontDir))), size=22)
+    # font = ImageFont.truetype(str(here) + '/fonts/18799.TTF', size=22)
 
 
     def random_line(afile):
