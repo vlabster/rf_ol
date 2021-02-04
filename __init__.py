@@ -260,7 +260,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     waves = Image.new(mode = "RGBA", size = (780,480))
     randpath_waves = choice(os.listdir(str(here) + '/waves'))
     wavesbg = Image.open(str(here) + '/waves/' + randpath_waves)
-    randcrop = (randint(0,200), randint(0, 200), randint(300, 600), randint(300, 600))
+    randcrop = (randint(0,200), randint(0, 200), randint(800, 1100), randint(800, 1100))
     newwavesbg = wavesbg.crop(randcrop)
     #resize the waves
     aspect_ratio = 780/480
