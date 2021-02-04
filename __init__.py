@@ -89,7 +89,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
         img2 = Image.open(path)
 
 
-    img2.resize(142, 188)
+    img2 = img2.resize(142, 188)
 
     # img2.thumbnail((142, 188), Image.ANTIALIAS)
 
