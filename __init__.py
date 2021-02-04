@@ -281,7 +281,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
     numbers = Image.open(str(here) + '/resourses/numbers.png')
 
-    card.paste(flag, (30,10), flag)
+    card.paste(flag, (70,10), flag)
 
     phrases = open(str(here) + '/resourses/phrases.txt')
     phrase = random_line(phrases).upper()
@@ -293,7 +293,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     cardDraw = ImageDraw.Draw(card)
 
     cardDraw.text(
-        (180, 50),
+        (220, 50),
         str(phrase),
         font=phrase_font,
         fill=str(randomhex)
