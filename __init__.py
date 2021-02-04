@@ -13,7 +13,11 @@ from flask_cors import CORS, cross_origin
 import base64
 import shutil
 from werkzeug.utils import secure_filename
- 
+
+import shutil
+import time
+import requests
+
 import os
 here = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
@@ -65,9 +69,21 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
     img1 = Image.new(mode = "RGBA", size = (780,480), color = (255, 0, 0, 0))
     randPhoto = randint(1, 59)
+
+    url = 'https://thispersondoesnotexist.com/image'
+    current_datetime = str(time.time())
+
+    responce = requests.get(url, stream=True)
     if (param == 0):
-        dir = str(here) + '/photos/'
-        img2 = Image.open(os.path.join(dir, random.choice(os.listdir(dir))))
+        img2 = ''
+        try:
+            with open(str(here) + '/result/' + current_datetime + '.png', 'wb') as out_file:
+                shutil.copyfileobj(responce.raw, out_file)
+            del responce
+            img2 = Image.open(str(here) + '/result/' + current_datetime + '.png')   
+        except:
+            dir = str(here) + '/photos/'
+            img2 = Image.open(os.path.join(dir, random.choice(os.listdir(dir))))
         # img2 = Image.open(str(here) + '/photos/' + str(randPhoto) + '.png')
     else:
         img2 = Image.open(path)
