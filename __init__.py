@@ -33,7 +33,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 symbolsMap = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
 
 
-def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", filename = "result", path = "RANDOM", param = 0):
+def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", imgurl="NONE", filename = "result", path = "RANDOM", param = 0):
     data = ["name", "surname", "burthDate", "Country", "Obl", "date1", "date2", "data3", "country2", "obl2", "categories"]
 
     def generateToken():
@@ -72,7 +72,12 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     img1 = Image.new(mode = "RGBA", size = (780,480), color = (255, 0, 0, 0))
     randPhoto = randint(1, 59)
 
-    url = 'https://thispersondoesnotexist.com/image'
+    if (imgurl !== "NONE"):
+        url = imgurl
+    else:
+        url = 'https://thispersondoesnotexist.com/image'
+
+
     current_datetime = str(time.time())
         
 
@@ -384,6 +389,7 @@ def get_image():
     second_name = request.args.get('second_name')
     birthdate = request.args.get('birthdate')
     country = request.args.get('country')
+    imgurl = request.args.get('imgurl')
     param = -1
     path = ''
     try:
@@ -395,7 +401,7 @@ def get_image():
         param = 0
         path = ''
 
-    generate_random_id(first_name, middle_name, second_name, birthdate, country, random_shit, str(path), param)
+    generate_random_id(first_name, middle_name, second_name, birthdate, country, imgurl, random_shit, str(path), param)
     filename = str(here) + '/result/' + random_shit + '.png'
     if (param == 1):
         os.remove(path)
