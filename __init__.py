@@ -17,6 +17,8 @@ from werkzeug.utils import secure_filename
 import shutil
 import time
 import requests
+from lxml import html
+from bs4 import BeautifulSoup
 
 import os
 here = os.path.dirname(os.path.abspath(__file__))
@@ -72,6 +74,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
     url = 'https://thispersondoesnotexist.com/image'
     current_datetime = str(time.time())
+        
 
     responce = requests.get(url, stream=True)
     if (param == 0):
@@ -352,6 +355,24 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 #         except Exception as e:
 #             return 'false'
 #     return 'true'
+    
+@app.route('/get_fb_photo', methods=['POST', 'GET'])
+@cross_origin()
+def get_fb_photo():
+    # return 'Hello world'
+    postUrl = request.args.get('fbHref')
+    
+    url = requests.get(postUrl)
+    
+    soup = BeautifulSoup(url.text,  features="lxml")
+    return str(postUrl)
+    # a = soup.findAll('a', {"class": "_2nlw _2nlv"})
+    
+    # # print(a[0].text)
+    # photo = soup.findAll('img', {"class": "_11kf img"})
+    # src = photo[0].attrs['src']
+    # # print(src)
+    # return a[0].text + ' ' + src
     
 
 @app.route('/get_image', methods=['POST'])
