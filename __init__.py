@@ -20,6 +20,7 @@ import requests
 from lxml import html
 from bs4 import BeautifulSoup
 import json
+import io
 
 import os
 here = os.path.dirname(os.path.abspath(__file__))
@@ -34,7 +35,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 symbolsMap = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
 
 
-def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", imgurl="NONE", filename = "result", path = "RANDOM", param = 0):
+def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", imgurl=None, filename = "result", path = "RANDOM", param = 0):
     data = ["name", "surname", "burthDate", "Country", "Obl", "date1", "date2", "data3", "country2", "obl2", "categories"]
 
     def generateToken():
@@ -73,7 +74,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     img1 = Image.new(mode = "RGBA", size = (780,480), color = (255, 0, 0, 0))
     randPhoto = randint(1, 59)
 
-    if (imgurl !== "NONE"):
+    if (imgurl != None):
         url = imgurl
     else:
         url = 'https://thispersondoesnotexist.com/image'
@@ -81,15 +82,20 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
     current_datetime = str(time.time())
         
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36',
 
-    responce = requests.get(url, stream=True)
+    }
+    responce = requests.get(url, headers=headers, stream=True)
+    # print(url)
     if (param == 0):
         img2 = ''
         try:
-            with open(str(here) + '/result/' + current_datetime + '.png', 'wb') as out_file:
+            with open(str(here) + '/result/' + current_datetime + '.jpg', 'wb') as out_file:
                 shutil.copyfileobj(responce.raw, out_file)
             del responce
-            img2 = Image.open(str(here) + '/result/' + current_datetime + '.png')   
+            img2 = Image.open(str(here) + '/result/' + current_datetime + '.jpg')  
+        # img2 = Image.open(io.BytesIO(responce.content))   
         except:
             dir = str(here) + '/photos/'
             img2 = Image.open(os.path.join(dir, random.choice(os.listdir(dir))))
@@ -102,7 +108,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
     # img2.thumbnail((142, 188), Image.ANTIALIAS)
 
-    img1.paste(img, (118, 192))
+    img1.paste(img3, (118, 192))
 
     finImg = ImageDraw.Draw(img1)
 
@@ -362,11 +368,11 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 #             return 'false'
 #     return 'true'
     
-@app.route('/get_fb_photo', methods=['POST', 'GET'])
+@app.route('/get_fb', methods=['POST', 'GET'])
 @cross_origin()
-def get_fb_photo():
+def get_fb():
     # return 'Hello world'
-    postUrl = request.args.get('fbHref')
+    postUrl = request.form.get('link')
     
     url = requests.get(postUrl)
     # return url.text
@@ -403,7 +409,7 @@ def get_image():
     second_name = request.args.get('second_name')
     birthdate = request.args.get('birthdate')
     country = request.args.get('country')
-    imgurl = request.args.get('imgurl')
+    imgurl = request.form.get('imgurl')
     param = -1
     path = ''
     try:
