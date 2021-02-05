@@ -19,6 +19,7 @@ import time
 import requests
 from lxml import html
 from bs4 import BeautifulSoup
+import json
 
 import os
 here = os.path.dirname(os.path.abspath(__file__))
@@ -363,16 +364,29 @@ def get_fb_photo():
     postUrl = request.args.get('fbHref')
     
     url = requests.get(postUrl)
+    # return url.text
+    soup = BeautifulSoup(url.text,  features="html5lib")
+    # return str(postUrl)
+    a = soup.findAll('a', {"class": "_2nlw _2nlv"})
     
-    soup = BeautifulSoup(url.text,  features="lxml")
-    return str(postUrl)
-    # a = soup.findAll('a', {"class": "_2nlw _2nlv"})
-    
-    # # print(a[0].text)
-    # photo = soup.findAll('img', {"class": "_11kf img"})
-    # src = photo[0].attrs['src']
-    # # print(src)
-    # return a[0].text + ' ' + src
+    # print(a[0].text)
+    photo = soup.findAll('img', {"class": "_11kf img"})
+    fullName = a[0].text
+    src = photo[0].attrs['src']
+    splitFullName = fullName.split(' ')
+    name = splitFullName[0]
+    surname = splitFullName[1]
+    # res.first_name = name
+    # res.second_name = surname
+    # res.img = src
+    res = {
+        'first_name': name,
+        'second_name': surname,
+        'img': src
+    }
+    js = json.dumps(res)
+    # print(src)
+    return js
     
 
 @app.route('/get_image', methods=['POST'])
