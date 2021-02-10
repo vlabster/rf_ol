@@ -35,7 +35,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 symbolsMap = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
 
 
-def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", imgurl=None, filename = "result", path = "RANDOM", param = 0):
+def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", imgurl=None, filename = "result", path = "RANDOM", param = 0, fonts = "RANDOM", flags = "RANDOM", docname = "RANDOM", bgrandomization = "WEAK"):
     data = ["name", "surname", "burthDate", "Country", "Obl", "date1", "date2", "data3", "country2", "obl2", "categories"]
 
     def generateToken():
@@ -115,9 +115,12 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
     # set font
     fontDir = str(here) + '/fonts/'
-    font = ImageFont.truetype(os.path.join(fontDir, random.choice(os.listdir(fontDir))), size=22)
-    phrase_font = ImageFont.truetype(os.path.join(fontDir, random.choice(os.listdir(fontDir))), size=30)
-    # font = ImageFont.truetype(str(here) + '/fonts/18799.TTF', size=22)
+    if (fonts == "RANDOM"):
+        font = ImageFont.truetype(os.path.join(fontDir, random.choice(os.listdir(fontDir))), size=22)
+        phrase_font = ImageFont.truetype(os.path.join(fontDir, random.choice(os.listdir(fontDir))), size=30)
+    else:
+        font = ImageFont.truetype(str(here) + '/fonts/18799.TTF', size=22)
+        phrase_font = ImageFont.truetype(str(here) + '/fonts/18799.TTF', size=30)
 
 
     def random_line(afile):
@@ -294,15 +297,21 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
 
     ### adding the static elements
-    randpath_flag = choice(os.listdir(str(here) + '/flags'))
-    flag = Image.open(str(here) + '/flags/' + randpath_flag)
+    if (flags == "RANDOM"):
+        randpath_flag = choice(os.listdir(str(here) + '/flags'))
+        flag = Image.open(str(here) + '/flags/' + randpath_flag)
+    else:
+        flag = Image.open(str(here) + '/resourses/04.png').convert("RGBA")
 
     numbers = Image.open(str(here) + '/resourses/numbers.png')
 
     card.paste(flag, (70,10), flag)
 
-    phrases = open(str(here) + '/resourses/phrases.txt')
-    phrase = random_line(phrases).upper()
+    if (docname == "RANDOM"):
+        phrases = open(str(here) + '/resourses/phrases.txt')
+        phrase = random_line(phrases).upper()
+    else:
+        phrase = 'WORLD RESIDENT ID'
 
     random0_255 = lambda: random.randint(0,120)
 
@@ -314,7 +323,8 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
         (220, 50),
         str(phrase),
         font=phrase_font,
-        fill=str(randomhex)
+        fill='#1C0606'
+        # fill=str(randomhex)
     )
 
 
@@ -346,6 +356,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     canvas.paste(card_shadow, (-10,-10), card_shadow)
 
     canvas.save(str(here) + '/result/' + str(filename) + '.png')
+# generate_random_id(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
 
 
 def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", imgurl=None, filename = "result", path = "RANDOM", param = 0, fonts = "RANDOM", flags = "RANDOM", docname = "RANDOM", bgrandomization = "WEAK"):
@@ -730,6 +741,11 @@ def get_image():
     birthdate = request.args.get('birthdate')
     country = request.args.get('country')
     imgurl = request.form.get('imgurl')
+    fonts = request.args.get('fonts')
+    flags = request.args.get('flags')
+    docname = request.args.get('docname')
+    bgrandomization = request.args.get('bgrandomization')
+
     param = -1
     path = ''
     try:
@@ -741,7 +757,7 @@ def get_image():
         param = 0
         path = ''
 
-    generate_random_id(first_name, middle_name, second_name, birthdate, country, imgurl, random_shit, str(path), param)
+    generate_random_id(first_name, middle_name, second_name, birthdate, country, imgurl, random_shit, str(path), param, fonts, flags, docname, bgrandomization)
     filename = str(here) + '/result/' + random_shit + '.png'
     if (param == 1):
         os.remove(path)
