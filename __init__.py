@@ -348,7 +348,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     canvas.save(str(here) + '/result/' + str(filename) + '.png')
 
 
-def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", imgurl=None, filename = "result", path = "RANDOM", param = 0, fonts = "RANDOM", flags = "RANDOM", docname = "RANDOM"):
+def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", imgurl=None, filename = "result", path = "RANDOM", param = 0, fonts = "RANDOM", flags = "RANDOM", docname = "RANDOM", bgrandomization = "WEAK"):
     data = ["name", "surname", "burthDate", "Country", "Obl", "date1", "date2", "data3", "country2", "obl2", "categories"]
 
     def generateToken():
@@ -770,6 +770,7 @@ def get_image_test():
     fonts = request.args.get('fonts')
     flags = request.args.get('flags')
     docname = request.args.get('docname')
+    bgrandomization = request.args.get('bgrandomization')
 
     param = -1
     path = ''
@@ -782,7 +783,7 @@ def get_image_test():
         param = 0
         path = ''
 
-    generate_random_id_test(first_name, middle_name, second_name, birthdate, country, imgurl, random_shit, str(path), param, fonts, flags, docname)
+    generate_random_id_test(first_name, middle_name, second_name, birthdate, country, imgurl, random_shit, str(path), param, fonts, flags, docname, bgrandomization)
     filename = str(here) + '/result/' + random_shit + '.png'
     if (param == 1):
         os.remove(path)
