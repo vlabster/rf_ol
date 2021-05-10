@@ -21,6 +21,8 @@ from lxml import html
 from bs4 import BeautifulSoup
 import json
 import io
+from PIL.ExifTags import TAGS
+
 
 import os
 here = os.path.dirname(os.path.abspath(__file__))
@@ -281,12 +283,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     waves = Image.new(mode = "RGBA", size = (780,480))
     randpath_waves = choice(os.listdir(str(here) + '/waves'))
     wavesbg = Image.open(str(here) + '/waves/' + randpath_waves)
-
-    if(bgrandomization == 'STRONG'):
-        randcrop = (randint(0,200), randint(0, 200), randint(300, 600), randint(300, 600))
-    else:
-        randcrop = (randint(0,200), randint(0, 200), randint(800, 1100), randint(800, 1100))
-
+    randcrop = (randint(0,200), randint(0, 200), randint(800, 1100), randint(800, 1100))
     newwavesbg = wavesbg.crop(randcrop)
     #resize the waves
     aspect_ratio = 780/480
@@ -361,6 +358,23 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     canvas.paste(card_shadow, (-10,-10), card_shadow)
 
     canvas.save(str(here) + '/result/' + str(filename) + '.png')
+
+    im = Image.open(str(here) + '/result/' + str(filename) + '.png')
+    rgb_im = im.convert('RGB')
+    rgb_im.save(str(here) + '/result/' + str(filename) + '.jpg')
+    os.remove(str(here) + '/result/' + str(filename) + '.png')
+
+    dir = str(here) + '/exifs/'
+
+    imgExif = Image.open(os.path.join(dir, random.choice(os.listdir(dir))))
+
+    imgResultExifs = Image.open(str(here) + '/result/' + str(filename) + '.jpg')
+
+    try:
+        exif = imgExif.info['exif']
+        imgResultExifs.save(str(here) + '/result/' + str(filename) + '.jpg', exif=exif)
+    except:
+        print(1)
 # generate_random_id(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
 
 
@@ -685,6 +699,25 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
     canvas.paste(card_shadow, (-10,-10), card_shadow)
 
     canvas.save(str(here) + '/result/' + str(filename) + '.png')
+
+    im = Image.open(str(here) + '/result/' + str(filename) + '.png')
+    rgb_im = im.convert('RGB')
+    rgb_im.save(str(here) + '/result/' + str(filename) + '.jpg')
+    os.remove(str(here) + '/result/' + str(filename) + '.png')
+
+    dir = str(here) + '/exifs/'
+
+    imgExif = Image.open(os.path.join(dir, random.choice(os.listdir(dir))))
+
+    imgResultExifs = Image.open(str(here) + '/result/' + str(filename) + '.jpg')
+
+    try:
+        exif = imgExif.info['exif']
+        imgResultExifs.save(str(here) + '/result/' + str(filename) + '.jpg', exif=exif)
+    except:
+        print(1)
+
+
 # generate_random_id(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
 
 
@@ -735,6 +768,26 @@ def get_fb():
     # print(src)
     return js
     
+def detect(url):
+    try:
+        r = requests.get(url, allow_redirects=True)
+        obj = []
+        for x in r.history:
+            obj.append({"url": x.url, "headers": x.headers['Location'], "status_code": x.status_code})
+        return obj
+    except:
+        return "Error"
+
+@app.route('/url_detective', methods=['get'])
+@cross_origin()
+def url_detective():
+    url = request.args.get('url')
+    res = detect(url)
+    try:
+        res = json.dumps(res)
+        return res
+    except:
+        return res
 
 @app.route('/get_image', methods=['POST'])
 @cross_origin()
@@ -763,11 +816,11 @@ def get_image():
         path = ''
 
     generate_random_id(first_name, middle_name, second_name, birthdate, country, imgurl, random_shit, str(path), param, fonts, flags, docname, bgrandomization)
-    filename = str(here) + '/result/' + random_shit + '.png'
+    filename = str(here) + '/result/' + random_shit + '.jpg'
     if (param == 1):
         os.remove(path)
 
-    return send_file(filename, mimetype='image/png')
+    return send_file(filename, mimetype='image/jpeg')
  
 @app.route('/')
 def hello_world():
@@ -805,11 +858,11 @@ def get_image_test():
         path = ''
 
     generate_random_id_test(first_name, middle_name, second_name, birthdate, country, imgurl, random_shit, str(path), param, fonts, flags, docname, bgrandomization)
-    filename = str(here) + '/result/' + random_shit + '.png'
+    filename = str(here) + '/result/' + random_shit + '.jpg'
     if (param == 1):
         os.remove(path)
 
-    return send_file(filename, mimetype='image/png')
+    return send_file(filename, mimetype='image/jpeg')
  
 if __name__ == '__main__':
     context = (cer, key)
