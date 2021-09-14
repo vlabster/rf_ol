@@ -34,7 +34,7 @@ app = Flask(__name__)
 context = SSL.Context(SSL.SSLv23_METHOD)
 cer = os.path.join(os.path.dirname(__file__), '/var/www/httpd-cert/www-root/liontracts.ru_le1.crt')
 key = os.path.join(os.path.dirname(__file__), '/var/www/httpd-cert/www-root/liontracts.ru_le1.key')
-
+app.debug = True
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 symbolsMap = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
