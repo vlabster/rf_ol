@@ -8,6 +8,7 @@ import os
 import datetime
 from flask import Flask
 from flask import send_file, request
+from threading import Thread
 import sys
 from flask_cors import CORS, cross_origin
 import base64
@@ -22,6 +23,8 @@ from bs4 import BeautifulSoup
 import json
 import io
 from PIL.ExifTags import TAGS
+
+from proxy_checker_1 import ProxyChecker
 
 
 import os
@@ -717,6 +720,40 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
     except:
         print(1)
 
+# global res_proxy
+def checker(arr):
+    res_proxy = {}
+    threads = []
+
+    def checkProxy(value):
+        checker = ProxyChecker()
+        proxy = value.split(':')
+
+        ip = proxy[0]
+        port = proxy[1]
+        user = ''
+        password = ''
+
+        if len(proxy) >= 3:
+            user = proxy[2]
+        
+        if len(proxy) >= 4:
+            password = proxy[3]
+        
+        result = checker.check_proxy(ip + ':' + port, True, False, user, password)
+        res_proxy[value] = result
+
+        return result
+
+    for val in arr:
+        th = Thread(target=checkProxy, args=(val,))
+        th.start()
+        threads.append(th)
+
+    for val in threads:
+        val.join()
+
+    return res_proxy
 
 # generate_random_id(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
 
@@ -788,6 +825,19 @@ def url_detective():
         return res
     except:
         return res
+
+@app.route('/proxy_checker', methods=['POST'])
+@cross_origin()
+def proxy_checker():
+    data = request.data
+    jsonData = json.loads(data)
+    res = checker(jsonData['data'])
+    return res
+    # try:
+    #     return jsonData['data'][0]
+    # except Exception:
+    #     return 1
+
 
 @app.route('/get_image', methods=['POST'])
 @cross_origin()
