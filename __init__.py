@@ -166,8 +166,8 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     if (birthdate == "RANDOM"):
         birthdate = get_random_date(1940, 2002)
 
-    card_given = get_random_date(2010, 2020)
-    card_expires = get_random_date(2022, 2030)
+    card_given = get_random_date(2017, 2020)
+    card_expires = get_random_date(2022, 2026)
 
     # draw text
     finImg.text(
@@ -507,8 +507,8 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
     if (birthdate == "RANDOM"):
         birthdate = get_random_date(1940, 2002)
 
-    card_given = get_random_date(2010, 2020)
-    card_expires = get_random_date(2022, 2030)
+    card_given = get_random_date(2017, 2020)
+    card_expires = get_random_date(2022, 2026)
 
     # draw text
     finImg.text(
