@@ -499,7 +499,7 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
         filename = filename.split('-')[0].lower()
         result = []
         for root, dirs, files in os.walk(search_path):
-            result.append(list(filter(lambda name: bool(re.search(filename, name)), files)))
+            result.append(list(filter(lambda name: filename in name, files)))
         return result[0]
 
     def get_random_date(start_year, end_year):
