@@ -496,6 +496,7 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
 
     def find_files(filename, search_path):
         filename = filename.split(' ')[0].lower()
+        filename = filename.split('-')[0].lower()
         result = []
         for root, dirs, files in os.walk(search_path):
             result.append(list(filter(lambda name: bool(re.search(filename, name)), files)))
@@ -549,7 +550,7 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
     finImg.text(
         (380, 277),
         ## str(card_given)
-        str(find_files(country, str(here) + '/flags/')),
+        str(find_files(country, str(here) + '/flags')),
         font=font,
         fill='#1C0606'
     )
@@ -652,8 +653,8 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
 
     ### adding the static elements
     if (flags == "RANDOM"):
-        if (len(find_files(country, str(here) + '/flags/')) > 0):
-            randpath_flag = find_files(country, str(here) + '/flags/')[0]
+        if (len(find_files(country, str(here) + '/flags')) > 0):
+            randpath_flag = find_files(country, str(here) + '/flags')[0]
         else:
             randpath_flag = choice(os.listdir(str(here) + '/flags'))
         flag = Image.open(str(here) + '/flags/' + randpath_flag)
