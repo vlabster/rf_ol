@@ -548,8 +548,7 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
 
     finImg.text(
         (380, 277),
-        ## str(card_given)
-        str(find_files(country, str(here) + '/flags')),
+        str(card_given),
         font=font,
         fill='#1C0606'
     )
