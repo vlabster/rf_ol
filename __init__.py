@@ -154,6 +154,17 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
         countries = open(str(here) + '/resourses/countries.txt')
         country = random_line(countries).upper()
 
+    def add_years(d, years):
+        """Return a date that's `years` years after the date (or datetime)
+        object `d`. Return the same calendar date (month and day) in the
+        destination year, if it exists, otherwise use the following day
+        (thus changing February 29 to March 1).
+
+        """
+        try:
+            return d.replace(year = d.year + years)
+        except ValueError:
+            return d + (date(d.year + years, 1, 1) - date(d.year, 1, 1))
 
     def get_random_date(start_year, end_year):
         start_date = datetime.date(start_year, 1, 1)
@@ -169,7 +180,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
         birthdate = get_random_date(1940, 2002)
 
     card_given = get_random_date(2017, 2020)
-    card_expires = get_random_date(2022, 2026)
+    card_expires = add_years(card_given, random.choice([5, 10]))
 
     # draw text
     finImg.text(
