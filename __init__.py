@@ -651,7 +651,7 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
 
     ### adding the static elements
     if (flags == "RANDOM"):
-        randpath_flag = find_files(country, str(here) + '/flags')[0]
+        randpath_flag = find_files(country, str(here) + '/flags')
         flag = Image.open(str(here) + '/flags/' + randpath_flag)
     else:
         flag = Image.open(str(here) + '/resourses/04.png').convert("RGBA")
