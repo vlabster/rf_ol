@@ -495,12 +495,10 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
         country = random_line(countries).upper()
 
     def find_files(filename, search_path):
-        filename = filename.split(' ')[0].lower()
-        filename = filename.split('-')[0].lower()
         result = []
         for root, dirs, files in os.walk(search_path):
-            result.append(list(filter(lambda name: filename in name, files)))
-        return result[0]
+            result = process.extract(filename, files, limit=1)
+        return result[0][0]
 
     def get_random_date(start_year, end_year):
         start_date = datetime.date(start_year, 1, 1)
@@ -653,10 +651,7 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
 
     ### adding the static elements
     if (flags == "RANDOM"):
-        if (len(find_files(country, str(here) + '/flags')) > 0):
-            randpath_flag = find_files(country, str(here) + '/flags')[0]
-        else:
-            randpath_flag = choice(os.listdir(str(here) + '/flags'))
+        randpath_flag = find_files(country, str(here) + '/flags')[0]
         flag = Image.open(str(here) + '/flags/' + randpath_flag)
     else:
         flag = Image.open(str(here) + '/resourses/04.png').convert("RGBA")
