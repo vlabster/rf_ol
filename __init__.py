@@ -498,7 +498,7 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
         result = []
         for root, dirs, files in os.walk(search_path):
             result = process.extract(filename, files, limit=1)
-        return result[0][0]
+        return result
 
     def get_random_date(start_year, end_year):
         start_date = datetime.date(start_year, 1, 1)
@@ -650,11 +650,11 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
 
 
     ### adding the static elements
-    if (flags == "RANDOM"):
-        randpath_flag = find_files(country, str(here) + '/flags')
-        flag = Image.open(str(here) + '/flags/' + randpath_flag)
-    else:
-        flag = Image.open(str(here) + '/resourses/04.png').convert("RGBA")
+    # if (flags == "RANDOM"):
+    #     randpath_flag = find_files(country, str(here) + '/flags')
+    #     flag = Image.open(str(here) + '/flags/' + randpath_flag)
+    # else:
+    flag = Image.open(str(here) + '/resourses/04.png').convert("RGBA")
 
     numbers = Image.open(str(here) + '/resourses/numbers.png')
 
