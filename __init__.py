@@ -76,6 +76,33 @@ def construct_name(country, sex):
     else:
         name = fake.name()
     return name
+
+### prototyping function that takes one argument 
+### - a string with a person's name
+### the function should return three strings: 
+### if a name has three words, those 3 should be returned
+### if a name has 2 or >4 words, it should be split into
+### two strings and the last one should be empty.
+
+def long_name_split(name):
+    partials = name.split(' ')
+    length = len(partials)
+
+    solution = []
+    if (length <= 3):
+        for i in range(3):
+            if (i <= (length - 1)):
+                solution.append(partials[i])
+            else:
+                solution.append('')
+    else:
+        temp = ' '.join(partials[0:int(length / 2)])
+        solution.append(temp)
+        temp = ' '.join(partials[int(length / 2):int(length)])
+        solution.append(temp)
+        solution.append('')
+
+    return solution
 ######### END HELPER FUNCTIONS #########
 
 def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", imgurl=None, filename = "result", path = "RANDOM", param = 0, fonts = "RANDOM", flags = "RANDOM", docname = "RANDOM", bgrandomization = "WEAK"):
