@@ -28,6 +28,10 @@ from PIL.ExifTags import TAGS
 from proxy_checker_1 import ProxyChecker
 from thefuzz import process
 
+import pycountry
+from faker import Faker
+import locale
+
 
 import os
 here = os.path.dirname(os.path.abspath(__file__))
@@ -41,6 +45,38 @@ CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 symbolsMap = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
 
+######### HELPER FUNCTIONS #########
+def get_locale(country):
+    pycnt_locale = country.alpha_2
+    search_res = process.extract(pycnt_locale + '_', locale.locale_alias.values(), limit=3)
+    return str(search_res[0][0]).split('.')[0]
+
+def get_country_by_name_or_random(name = ''):
+    if name == '':
+        country = random.choice(list(pycountry.countries))
+    else:
+        country = pycountry.countries.search_fuzzy(name)[0]
+    return country
+
+def get_combined_locale(name = ''):
+    country = get_country_by_name_or_random(name)
+    locale = get_locale(country)
+    return locale
+
+def construct_name(country, sex):
+    try:
+        fake = Faker(get_combined_locale(country))
+    except:
+        fake = Faker('en_US')
+
+    if (sex == 'male'):
+        name = fake.name_male()
+    elif (sex == 'female'):
+        name = fake.name_female()
+    else:
+        name = fake.name()
+    return name
+######### END HELPER FUNCTIONS #########
 
 def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", imgurl=None, filename = "result", path = "RANDOM", param = 0, fonts = "RANDOM", flags = "RANDOM", docname = "RANDOM", bgrandomization = "WEAK"):
     data = ["name", "surname", "burthDate", "Country", "Obl", "date1", "date2", "data3", "country2", "obl2", "categories"]
