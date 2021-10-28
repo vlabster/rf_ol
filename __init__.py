@@ -205,18 +205,17 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
         countries = open(str(here) + '/resourses/countries.txt')
         country = random_line(countries).upper()
 
-    sex = random.choice(['male', 'female'])
-    long_random_name = construct_name(country, sex)
-    splitted_long_name = long_name_split(long_random_name)
-
     if (first_name == "RANDOM"):
-        first_name = splitted_long_name[0]
+        first_names = open(str(here) + '/resourses/names.txt')
+        first_name = random_line(first_names).upper()
 
     if (middle_name == "RANDOM"):
-        middle_name = splitted_long_name[1]
+        middle_names = open(str(here) + '/resourses/names.txt')
+        middle_name = random_line(middle_names).upper()
 
     if (second_name == "RANDOM"):
-        second_name = splitted_long_name[2]
+        second_names = open(str(here) + '/resourses/families.txt')
+        second_name = random_line(second_names).upper()
 
     def add_years(d, years):
         """Return a date that's `years` years after the date (or datetime)
@@ -998,4 +997,4 @@ def get_image_test():
  
 if __name__ == '__main__':
     context = (cer, key)
-    app.run( host='0.0.0.0', ssl_context=context, threaded=True)
+    app.run( host='0.0.0.0', ssl_context=context)
