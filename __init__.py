@@ -457,7 +457,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 # generate_random_id(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
 
 
-def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", imgurl=None, filename = "result", path = "RANDOM", param = 0, fonts = "RANDOM", flags = "RANDOM", docname = "RANDOM", bgrandomization = "WEAK"):
+def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", imgurl=None, filename = "result", path = "RANDOM", param = 0, fonts = "RANDOM", flags = "RANDOM", docname = "RANDOM", bgrandomization = "WEAK", gender="RANDOM"):
     data = ["name", "surname", "burthDate", "Country", "Obl", "date1", "date2", "data3", "country2", "obl2", "categories"]
 
     def generateToken():
@@ -496,10 +496,20 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
     img1 = Image.new(mode = "RGBA", size = (780,480), color = (255, 0, 0, 0))
     randPhoto = randint(1, 59)
 
+    if (gender == "RANDOM" or gender.lower() not in ['male','female']):
+        gender = random.choice(['male', 'female'])
+    else:
+        gender = gender.lower()
+
+
     if (imgurl != None):
         url = imgurl
     else:
-        url = 'https://thispersondoesnotexist.com/image'
+        try:
+            image_json = requests.get('https://fakeface.rest/face/json?gender=' + gender + '&minimum_age=18')
+            url = image_json['image_url']
+        except:
+            url = 'https://thispersondoesnotexist.com/image'
 
 
     current_datetime = str(time.time())
@@ -557,7 +567,7 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
         countries = open(str(here) + '/resourses/countries.txt')
         country = random_line(countries).upper()
     
-    sex = random.choice(['male', 'female'])
+    sex = gender
     long_random_name = construct_name(country, sex)
     splitted_long_name = long_name_split(long_random_name)
 
