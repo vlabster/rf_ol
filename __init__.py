@@ -496,9 +496,10 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
     img1 = Image.new(mode = "RGBA", size = (780,480), color = (255, 0, 0, 0))
     randPhoto = randint(1, 59)
 
-    megadebug = str(gender.lower() not in ['male','female'])
+    megadebug = str(gender.lower() not in ['male','female']) + ' ' + gender.lower()
+    # megadebug = str(gender.lower() not in ['male','female'])
 
-    if (gender == "RANDOM" or (gender.lower() not in ['male','female'])):
+    if (gender.lower() not in ['male','female']):
         gender = random.choice(['male', 'female'])
     else:
         gender = gender.lower()
