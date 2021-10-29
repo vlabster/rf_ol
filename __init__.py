@@ -496,9 +496,6 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
     img1 = Image.new(mode = "RGBA", size = (780,480), color = (255, 0, 0, 0))
     randPhoto = randint(1, 59)
 
-    megadebug = str(gender.lower() not in ['male','female']) + ' ' + gender.lower()
-    # megadebug = str(gender.lower() not in ['male','female'])
-
     if (gender.lower() not in ['male','female']):
         gender = random.choice(['male', 'female'])
     else:
@@ -622,8 +619,7 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
 
     finImg.text(
         (380, 208),
-        # second_name,
-        megadebug,
+        second_name,
         font=font,
         fill='#1C0606'
     )
@@ -990,6 +986,7 @@ def get_image_test():
     fonts = request.args.get('fonts')
     flags = request.args.get('flags')
     docname = request.args.get('docname')
+    gender = request.args.get('gender')
     bgrandomization = request.args.get('bgrandomization')
 
     param = -1
