@@ -619,7 +619,8 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
 
     finImg.text(
         (380, 208),
-        second_name,
+        # second_name,
+        gender,
         font=font,
         fill='#1C0606'
     )
