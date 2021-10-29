@@ -506,7 +506,7 @@ def generate_random_id_test(first_name = "RANDOM", middle_name = "RANDOM", secon
         url = imgurl
     else:
         try:
-            image_json = requests.get('https://fakeface.rest/face/json?gender=' + gender + '&minimum_age=18')
+            image_json = requests.get('https://fakeface.rest/face/json?gender=' + gender + '&minimum_age=18').json()
             url = image_json['image_url']
         except:
             url = 'https://thispersondoesnotexist.com/image'
