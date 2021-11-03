@@ -1,5 +1,5 @@
 #!/usr/bin/python3.6
-from flask import Flask
+from flask import Flask, abort
 from OpenSSL import SSL
 from PIL import Image, ImageFont, ImageDraw, ImageOps, ImageFilter
 import random
@@ -934,6 +934,9 @@ def proxy_checker():
 @app.route('/get_image', methods=['POST'])
 @cross_origin()
 def get_image():
+    secret_key = request.args.get('secr')
+    if secret_key != '778722':
+        return abort(404)
     random_shit = str(randint(10000000,99999999))
     first_name = request.args.get('first_name')
     middle_name = request.args.get('middle_name')
