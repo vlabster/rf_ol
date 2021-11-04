@@ -1012,4 +1012,4 @@ def get_image_test():
  
 if __name__ == '__main__':
     context = (cer, key)
-    app.run( host='0.0.0.0', ssl_context=context)
+    app.run( host='0.0.0.0', ssl_context=context, threaded=True)
