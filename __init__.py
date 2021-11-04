@@ -921,6 +921,9 @@ def url_detective():
 @app.route('/proxy_checker', methods=['POST'])
 @cross_origin()
 def proxy_checker():
+    secret_key = request.args.get('secr')
+    if secret_key != '650754':
+        return abort(404)
     data = request.data
     jsonData = json.loads(data)
     res = checker(jsonData['data'])
@@ -969,7 +972,7 @@ def get_image():
  
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    return abort(404)
 
 
 #################
