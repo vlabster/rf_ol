@@ -105,7 +105,7 @@ def long_name_split(name):
     return solution
 ######### END HELPER FUNCTIONS #########
 
-def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", imgurl=None, filename = "result", path = "RANDOM", param = 0, fonts = "RANDOM", flags = "RANDOM", docname = "RANDOM", bgrandomization = "WEAK"):
+def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_name = "RANDOM", birthdate = "RANDOM", country = "RANDOM", imgurl=None, filename = "result", path = "RANDOM", param = 0, fonts = "RANDOM", flags = "RANDOM", docname = "RANDOM", bgrandomization = "WEAK", gender="RANDOM"):
     data = ["name", "surname", "burthDate", "Country", "Obl", "date1", "date2", "data3", "country2", "obl2", "categories"]
 
     def generateToken():
@@ -144,10 +144,20 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
     img1 = Image.new(mode = "RGBA", size = (780,480), color = (255, 0, 0, 0))
     randPhoto = randint(1, 59)
 
+    if (gender.lower() not in ['male','female']):
+        gender = random.choice(['male', 'female'])
+    else:
+        gender = gender.lower()
+
+
     if (imgurl != None):
         url = imgurl
     else:
-        url = 'https://thispersondoesnotexist.com/image'
+        try:
+            image_json = requests.get('https://fakeface.rest/face/json?gender=' + gender + '&minimum_age=18').json()
+            url = image_json['image_url']
+        except:
+            url = 'https://thispersondoesnotexist.com/image'
 
 
     current_datetime = str(time.time())
@@ -200,34 +210,29 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
                 continue
             line = aline
         return line
-    
+
     if (country == "RANDOM"):
         countries = open(str(here) + '/resourses/countries.txt')
         country = random_line(countries).upper()
+    
+    sex = gender
+    long_random_name = construct_name(country, sex)
+    splitted_long_name = long_name_split(long_random_name)
 
     if (first_name == "RANDOM"):
-        first_names = open(str(here) + '/resourses/names.txt')
-        first_name = random_line(first_names).upper()
+        first_name = splitted_long_name[0]
 
     if (middle_name == "RANDOM"):
-        middle_names = open(str(here) + '/resourses/names.txt')
-        middle_name = random_line(middle_names).upper()
+        middle_name = splitted_long_name[1]
 
     if (second_name == "RANDOM"):
-        second_names = open(str(here) + '/resourses/families.txt')
-        second_name = random_line(second_names).upper()
+        second_name = splitted_long_name[2]
 
-    def add_years(d, years):
-        """Return a date that's `years` years after the date (or datetime)
-        object `d`. Return the same calendar date (month and day) in the
-        destination year, if it exists, otherwise use the following day
-        (thus changing February 29 to March 1).
-
-        """
-        try:
-            return d.replace(year = d.year + years)
-        except ValueError:
-            return d + (date(d.year + years, 1, 1) - date(d.year, 1, 1))
+    def find_files(filename, search_path):
+        result = []
+        for root, dirs, files in os.walk(search_path):
+            result = process.extract(filename, files, limit=1)
+        return result[0][0]
 
     def get_random_date(start_year, end_year):
         start_date = datetime.date(start_year, 1, 1)
@@ -243,7 +248,7 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
         birthdate = get_random_date(1940, 2002)
 
     card_given = get_random_date(2017, 2020)
-    card_expires = add_years(card_given, random.choice([5, 10]))
+    card_expires = get_random_date(2022, 2026)
 
     # draw text
     finImg.text(
@@ -376,13 +381,21 @@ def generate_random_id(first_name = "RANDOM", middle_name = "RANDOM", second_nam
 
     card.paste(waves, (0,0))
 
-
-    ### adding the static elements
-    if (flags == "RANDOM"):
+    flag = Image.open(str(here) + '/resourses/04.png').convert("RGBA")
+    ## adding the static elements
+    if (flags == "RANDOM" and country != "RANDOM"):
+        randpath_flag = find_files(country, str(here) + '/flags')
+        flag = Image.open(str(here) + '/flags/' + randpath_flag)
+    elif (flags != "RANDOM" and country == "RANDOM"):
         randpath_flag = choice(os.listdir(str(here) + '/flags'))
         flag = Image.open(str(here) + '/flags/' + randpath_flag)
-    else:
-        flag = Image.open(str(here) + '/resourses/04.png').convert("RGBA")
+    # elif (flags == "RANDOM"):
+    #     # randpath_flag = find_files(country, str(here) + '/flags')
+    #     # flag = Image.open(str(here) + '/flags/' + randpath_flag)
+    #     randpath_flag = choice(os.listdir(str(here) + '/flags'))
+    #     flag = Image.open(str(here) + '/flags/' + randpath_flag)
+    # else:
+    #     flag = Image.open(str(here) + '/resourses/04.png').convert("RGBA")
 
     numbers = Image.open(str(here) + '/resourses/numbers.png')
 
